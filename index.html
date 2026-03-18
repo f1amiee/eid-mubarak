@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Selamat Hari Raya</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+
+:root{
+  --black:   #05080a;
+  --deep:    #080f0d;
+  --green1:  #0e2a1c;
+  --green2:  #173d28;
+  --green3:  #1f5235;
+  --emerald: #2d7a52;
+  --glow:    #3aaf70;
+  --gold:    #c8a84b;
+  --gold2:   #e6cc80;
+  --gold3:   #f5e9c0;
+  --white:   #f0ede6;
+  --offwhite:#d8d4ca;
+  --muted:   #7a8a7e;
+}
+
+html,body{
+  width:100%;
+  height:100%;
+  height:100dvh;
+  background:var(--black);
+  overflow:hidden;
+  font-family:'Cormorant Garamond',serif;
+}
+
+/* ── FULL BLEED SCENE ── */
+.scene{
+  position:relative;
+  width:100%;
+  height:100%;
+  height:100dvh;
+  overflow:hidden;
+}
+
+/* ── SKY ── */
+.sky{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 100% 55% at 50% 0%, #0e2a1c 0%, #05080a 65%),
+    linear-gradient(180deg,#080f0d 0%,#05080a 100%);
+}
+
+/* ── LETTERBOX — thinner on mobile ── */
+.lb-top,.lb-bot{
+  position:fixed;left:0;right:0;
+  background:var(--black);
+  z-index:200;
+  pointer-events:none;
+}
+.lb-top{top:0;height:env(safe-area-inset-top,0px);}
+.lb-bot{bottom:0;height:env(safe-area-inset-bottom,0px);}
+
+/* ── STARS ── */
+.stars{position:absolute;inset:0;z-index:2;pointer-events:none;}
+.star{
+  position:absolute;background:white;border-radius:50%;
+  animation:starTwinkle var(--d) ease-in-out infinite;
+  animation-delay:var(--dl);
+}
+@keyframes starTwinkle{
+  0%,100%{opacity:var(--mo);transform:scale(1);}
+  50%{opacity:1;transform:scale(1.6);}
+}
+
+/* ── MOON — centred high up ── */
+.moon-wrap{
+  position:absolute;
+  top:clamp(40px,8vh,80px);
+  left:50%;transform:translateX(-50%);
+  z-index:5;
+  animation:moonRise 2.2s cubic-bezier(0.22,1,0.36,1) both;
+}
+@keyframes moonRise{
+  from{opacity:0;transform:translateX(-50%) translateY(24px);}
+  to{opacity:1;transform:translateX(-50%) translateY(0);}
+}
+.moon{
+  width:clamp(80px,22vw,120px);
+  height:clamp(80px,22vw,120px);
+  border-radius:50%;
+  background:radial-gradient(circle at 38% 38%,
+    #f5e9c0 0%,#e6cc80 30%,#c8a84b 65%,#8a6a20 100%);
+  box-shadow:
+    0 0 40px rgba(200,168,75,0.3),
+    0 0 100px rgba(200,168,75,0.15),
+    0 0 200px rgba(200,168,75,0.07);
+  position:relative;
+  animation:moonGlow 6s ease-in-out infinite;
+}
+@keyframes moonGlow{
+  0%,100%{box-shadow:0 0 40px rgba(200,168,75,0.3),0 0 100px rgba(200,168,75,0.15),0 0 200px rgba(200,168,75,0.07);}
+  50%    {box-shadow:0 0 65px rgba(200,168,75,0.4),0 0 140px rgba(200,168,75,0.22),0 0 280px rgba(200,168,75,0.1);}
+}
+.moon::before{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:rgba(160,120,30,0.3);top:20px;left:26px;}
+.moon::after {content:'';position:absolute;width:10px;height:10px;border-radius:50%;background:rgba(160,120,30,0.2);top:46px;left:52px;}
+
+.moon-halo{
+  position:absolute;border-radius:50%;
+  border:1px solid rgba(200,168,75,0.07);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  animation:haloBreath 4s ease-in-out infinite;
+}
+.halo1{width:clamp(120px,32vw,170px);height:clamp(120px,32vw,170px);}
+.halo2{width:clamp(165px,44vw,220px);height:clamp(165px,44vw,220px);animation-delay:.5s;border-color:rgba(200,168,75,0.04);}
+.halo3{width:clamp(220px,58vw,290px);height:clamp(220px,58vw,290px);animation-delay:1s; border-color:rgba(200,168,75,0.025);}
+@keyframes haloBreath{
+  0%,100%{opacity:.5;transform:translate(-50%,-50%) scale(1);}
+  50%    {opacity:1; transform:translate(-50%,-50%) scale(1.05);}
+}
+
+/* ── KETUPAT — repositioned for portrait ── */
+.ketupat-float{
+  position:absolute;z-index:8;
+  animation:ketFloat var(--dur) ease-in-out infinite,
+            ketReveal 1.4s var(--rd) cubic-bezier(0.22,1,0.36,1) both;
+}
+@keyframes ketFloat{
+  0%,100%{transform:translateY(0) rotate(var(--r0));}
+  50%    {transform:translateY(var(--dy)) rotate(var(--r1));}
+}
+@keyframes ketReveal{
+  from{opacity:0;transform:translateY(18px) scale(0.8);}
+  to  {opacity:1;transform:translateY(0)    scale(1);}
+}
+
+/* ── FIREFLIES ── */
+.firefly{
+  position:absolute;width:3px;height:3px;border-radius:50%;
+  background:var(--glow);
+  box-shadow:0 0 6px var(--glow),0 0 12px rgba(58,175,112,0.5);
+  animation:ffMove var(--dur) ease-in-out infinite;
+  animation-delay:var(--dl);
+  z-index:7;pointer-events:none;
+}
+@keyframes ffMove{
+  0%  {transform:translate(0,0);opacity:0;}
+  20% {opacity:.9;}
+  50% {transform:translate(var(--tx),var(--ty));opacity:.5;}
+  80% {opacity:.8;}
+  100%{transform:translate(var(--tx2),var(--ty2));opacity:0;}
+}
+
+/* ── ATMOSPHERE ── */
+.mist{
+  position:absolute;inset:0;z-index:4;pointer-events:none;
+  background:
+    radial-gradient(ellipse 130% 35% at 50% 100%,rgba(14,42,28,0.55) 0%,transparent 70%),
+    radial-gradient(ellipse 70% 25% at 15% 85%,rgba(13,61,43,0.3) 0%,transparent 60%),
+    radial-gradient(ellipse 70% 25% at 85% 88%,rgba(13,61,43,0.3) 0%,transparent 60%);
+}
+.vignette{
+  position:absolute;inset:0;z-index:3;pointer-events:none;
+  background:radial-gradient(ellipse 100% 100% at 50% 50%,transparent 35%,rgba(5,8,10,0.75) 100%);
+}
+
+/* ── LANDSCAPE SVG — taller crop for portrait ── */
+.landscape{
+  position:absolute;bottom:0;left:0;right:0;z-index:6;
+  animation:landReveal 2s 0.7s both;
+}
+@keyframes landReveal{
+  from{opacity:0;transform:translateY(16px);}
+  to  {opacity:1;transform:translateY(0);}
+}
+
+/* ── TEXT LAYER — scrollable inner for very short phones ── */
+.text-layer{
+  position:absolute;
+  bottom:0;left:0;right:0;
+  z-index:10;
+  padding:0 clamp(24px,6vw,44px) clamp(24px,6vh,48px);
+  padding-bottom:calc(clamp(24px,6vh,48px) + env(safe-area-inset-bottom,0px));
+  background:linear-gradient(to top,
+    rgba(5,8,10,0.97) 0%,
+    rgba(5,8,10,0.88) 35%,
+    rgba(5,8,10,0.45) 62%,
+    transparent 100%);
+}
+
+.eyebrow{
+  font-family:'Cinzel',serif;
+  font-size:clamp(0.52rem,2.4vw,0.65rem);
+  letter-spacing:0.32em;
+  color:var(--gold);
+  text-transform:uppercase;
+  opacity:0;
+  animation:textUp 1s 1.3s forwards;
+  display:block;
+  margin-bottom:clamp(10px,2.5vh,18px);
+}
+
+.main-heading{
+  font-family:'Cormorant Garamond',serif;
+  font-weight:300;
+  font-style:italic;
+  line-height:0.9;
+  margin-bottom:clamp(12px,2.5vh,20px);
+  opacity:0;
+  animation:textUp 1.2s 1.5s forwards;
+}
+.heading-line1{
+  font-size:clamp(52px,16vw,92px);
+  color:var(--white);
+  display:block;
+  letter-spacing:-0.01em;
+}
+.heading-line2{
+  font-size:clamp(34px,11vw,62px);
+  color:var(--gold2);
+  display:block;
+  letter-spacing:0.03em;
+}
+.heading-line3{
+  font-size:clamp(14px,4.5vw,24px);
+  color:var(--muted);
+  display:block;
+  letter-spacing:0.2em;
+  font-style:normal;
+  font-family:'Cinzel',serif;
+  font-weight:400;
+  margin-top:6px;
+}
+
+.divider-line{
+  display:flex;align-items:center;gap:12px;
+  margin:clamp(12px,2.5vh,20px) 0;
+  opacity:0;
+  animation:textUp 1s 1.8s forwards;
+}
+.dl-bar{height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);flex:1;}
+.dl-icon{color:var(--gold);font-size:clamp(0.6rem,2.5vw,0.72rem);letter-spacing:0.08em;white-space:nowrap;}
+
+.message{
+  font-size:clamp(0.88rem,3.8vw,1.05rem);
+  color:var(--offwhite);
+  line-height:1.9;
+  font-weight:300;
+  opacity:0;
+  animation:textUp 1s 2s forwards;
+}
+.message em{color:var(--gold2);font-style:italic;}
+
+/* ── MUSIC — bigger touch target ── */
+.music-row{
+  display:flex;align-items:center;gap:14px;
+  margin-top:clamp(16px,3.5vh,28px);
+  opacity:0;
+  animation:textUp 1s 2.2s forwards;
+}
+.music-play{
+  width:48px;height:48px;
+  border:1px solid rgba(200,168,75,0.4);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--gold2);font-size:1rem;
+  cursor:pointer;
+  background:rgba(200,168,75,0.07);
+  flex-shrink:0;
+  transition:background .25s,border-color .25s,box-shadow .25s;
+  -webkit-touch-callout:none;user-select:none;
+}
+.music-play:active{
+  background:rgba(200,168,75,0.2);
+  border-color:var(--gold);
+  box-shadow:0 0 24px rgba(200,168,75,0.3);
+  transform:scale(0.94);
+}
+.music-info{flex:1;min-width:0;}
+.music-track{
+  font-family:'Cinzel',serif;
+  font-size:clamp(0.58rem,2.4vw,0.66rem);
+  letter-spacing:0.2em;
+  color:var(--gold);
+  text-transform:uppercase;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.music-status{
+  font-size:clamp(0.7rem,2.8vw,0.78rem);
+  color:var(--muted);margin-top:2px;font-style:italic;
+}
+.eq-bars{display:flex;gap:3px;align-items:flex-end;height:20px;flex-shrink:0;}
+.eq-bar{
+  width:3px;border-radius:1px;
+  background:linear-gradient(to top,var(--emerald),var(--glow));
+  animation:eqDance var(--s) ease-in-out infinite alternate;
+  animation-delay:var(--d);
+}
+@keyframes eqDance{from{height:3px;}to{height:var(--h);}}
+.eq-bar:nth-child(1){--s:.6s;--d:0s;  --h:9px}
+.eq-bar:nth-child(2){--s:.8s;--d:.1s; --h:16px}
+.eq-bar:nth-child(3){--s:.5s;--d:.05s;--h:12px}
+.eq-bar:nth-child(4){--s:.9s;--d:.15s;--h:20px}
+.eq-bar:nth-child(5){--s:.7s;--d:.08s;--h:14px}
+.eq-bar:nth-child(6){--s:.55s;--d:.12s;--h:9px}
+.eq-bars.paused .eq-bar{animation-play-state:paused;height:3px;}
+
+@keyframes textUp{
+  from{opacity:0;transform:translateY(12px);}
+  to  {opacity:1;transform:translateY(0);}
+}
+</style>
+</head>
+<body>
+
+<!-- safe-area bars -->
+<div class="lb-top"></div>
+<div class="lb-bot"></div>
+
+<div class="scene">
+
+  <div class="sky"></div>
+  <div class="stars" id="stars"></div>
+
+  <!-- MOON -->
+  <div class="moon-wrap">
+    <div class="moon-halo halo1"></div>
+    <div class="moon-halo halo2"></div>
+    <div class="moon-halo halo3"></div>
+    <div class="moon"></div>
+  </div>
+
+  <div id="fireflies"></div>
+  <div class="vignette"></div>
+  <div class="mist"></div>
+
+  <!-- KETUPAT kanan — repositioned for portrait -->
+  <div class="ketupat-float" style="right:clamp(10px,5vw,36px);top:clamp(180px,35vh,310px);--dur:8s;--dy:-16px;--r0:-7deg;--r1:3deg;--rd:1.0s;opacity:.7;">
+    <svg width="clamp(52px,14vw,80px)" height="clamp(60px,16vw,92px)" viewBox="0 0 70 80">
+      <defs>
+        <linearGradient id="kd1" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#2d7a52" stop-opacity=".9"/>
+          <stop offset="100%" stop-color="#0e2a1c" stop-opacity=".95"/>
+        </linearGradient>
+      </defs>
+      <polygon points="35,3 67,35 35,67 3,35" fill="url(#kd1)" stroke="rgba(200,168,75,.5)" stroke-width="1.5"/>
+      <line x1="3" y1="35" x2="67" y2="35" stroke="rgba(200,168,75,.2)" stroke-width="1"/>
+      <line x1="35" y1="3" x2="35" y2="67" stroke="rgba(200,168,75,.2)" stroke-width="1"/>
+      <line x1="19" y1="19" x2="51" y2="51" stroke="rgba(200,168,75,.12)" stroke-width=".8"/>
+      <line x1="51" y1="19" x2="19" y2="51" stroke="rgba(200,168,75,.12)" stroke-width=".8"/>
+      <polygon points="35,15 55,35 35,55 15,35" fill="none" stroke="rgba(200,168,75,.35)" stroke-width="1"/>
+      <polygon points="35,25 45,35 35,45 25,35" fill="rgba(200,168,75,.12)" stroke="rgba(200,168,75,.5)" stroke-width="1"/>
+      <circle cx="35" cy="35" r="3.5" fill="rgba(200,168,75,.7)"/>
+      <rect x="33" y="1" width="4" height="8" rx="2" fill="rgba(200,168,75,.5)"/>
+      <line x1="35" y1="67" x2="35" y2="78" stroke="rgba(200,168,75,.4)" stroke-width="1.5"/>
+      <circle cx="35" cy="79" r="2" fill="rgba(200,168,75,.4)"/>
+    </svg>
+  </div>
+
+  <!-- KETUPAT kiri — smaller -->
+  <div class="ketupat-float" style="left:clamp(8px,4vw,28px);top:clamp(220px,42vh,360px);--dur:10s;--dy:-20px;--r0:5deg;--r1:-3deg;--rd:1.4s;opacity:.45;">
+    <svg width="clamp(36px,10vw,52px)" height="clamp(42px,12vw,60px)" viewBox="0 0 48 56">
+      <defs>
+        <linearGradient id="kd2" x1="100%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#1f5235" stop-opacity=".8"/>
+          <stop offset="100%" stop-color="#080f0d" stop-opacity=".9"/>
+        </linearGradient>
+      </defs>
+      <polygon points="24,2 46,24 24,46 2,24" fill="url(#kd2)" stroke="rgba(200,168,75,.4)" stroke-width="1.2"/>
+      <line x1="2" y1="24" x2="46" y2="24" stroke="rgba(200,168,75,.18)" stroke-width=".8"/>
+      <line x1="24" y1="2" x2="24" y2="46" stroke="rgba(200,168,75,.18)" stroke-width=".8"/>
+      <polygon points="24,11 37,24 24,37 11,24" fill="none" stroke="rgba(200,168,75,.3)" stroke-width=".8"/>
+      <circle cx="24" cy="24" r="2.5" fill="rgba(200,168,75,.6)"/>
+      <rect x="22" y="0" width="4" height="6" rx="2" fill="rgba(200,168,75,.4)"/>
+      <line x1="24" y1="46" x2="24" y2="55" stroke="rgba(200,168,75,.35)" stroke-width="1.2"/>
+      <circle cx="24" cy="56" r="1.5" fill="rgba(200,168,75,.35)"/>
+    </svg>
+  </div>
+
+  <!-- LANDSCAPE — taller for portrait -->
+  <div class="landscape">
+    <svg viewBox="0 0 390 260" xmlns="http://www.w3.org/2000/svg"
+         preserveAspectRatio="xMidYMax slice" width="100%" style="display:block;">
+      <!-- distant hills -->
+      <path d="M0,160 Q60,100 130,135 Q195,105 260,128 Q320,100 390,130 L390,260 L0,260 Z"
+            fill="rgba(14,42,28,.55)"/>
+      <!-- mid layer -->
+      <path d="M0,185 Q50,155 110,172 Q175,148 240,168 Q305,148 390,170 L390,260 L0,260 Z"
+            fill="rgba(8,15,13,.82)"/>
+      <!-- foreground -->
+      <path d="M0,215 Q45,200 95,212 Q160,198 230,210 Q300,196 390,212 L390,260 L0,260 Z"
+            fill="rgba(5,8,10,.96)"/>
+
+      <!-- Pokok kelapa kiri -->
+      <line x1="55" y1="260" x2="55" y2="170" stroke="#040908" stroke-width="6"/>
+      <path d="M55,170 Q30,145 8,150 Q36,155 55,170"   fill="#040908"/>
+      <path d="M55,170 Q78,142 100,147 Q72,156 55,170" fill="#040908"/>
+      <path d="M55,175 Q28,162 18,168 Q40,166 55,175"  fill="#040908" opacity=".85"/>
+      <path d="M55,175 Q80,163 92,169 Q70,167 55,175"  fill="#040908" opacity=".85"/>
+
+      <!-- Pokok kelapa kanan -->
+      <line x1="335" y1="260" x2="335" y2="175" stroke="#040908" stroke-width="5"/>
+      <path d="M335,175 Q312,152 292,157 Q318,161 335,175" fill="#040908"/>
+      <path d="M335,175 Q356,150 374,154 Q350,162 335,175" fill="#040908"/>
+      <path d="M335,180 Q310,168 300,173 Q322,171 335,180" fill="#040908" opacity=".8"/>
+
+      <!-- Masjid tengah -->
+      <rect x="158" y="178" width="74" height="42" fill="#040908"/>
+      <rect x="167" y="170" width="56" height="12"  fill="#040908"/>
+      <!-- Dome -->
+      <path d="M174,170 Q195,145 216,170 Z" fill="#040908"/>
+      <!-- Menara kiri -->
+      <rect x="153" y="168" width="8" height="52" fill="#040908"/>
+      <path d="M153,168 Q157,156 161,168 Z"   fill="#040908"/>
+      <!-- Menara kanan -->
+      <rect x="229" y="168" width="8" height="52" fill="#040908"/>
+      <path d="M229,168 Q233,156 237,168 Z"   fill="#040908"/>
+      <!-- Tingkap glow -->
+      <rect x="177" y="185" width="10" height="14" rx="5" fill="rgba(200,168,75,.18)"/>
+      <rect x="203" y="185" width="10" height="14" rx="5" fill="rgba(200,168,75,.15)"/>
+      <circle cx="195" cy="145" r="4" fill="rgba(200,168,75,.25)"/>
+      <!-- lantern glow hints -->
+      <circle cx="148" cy="190" r="5" fill="rgba(200,168,75,.08)"/>
+      <circle cx="242" cy="188" r="5" fill="rgba(200,168,75,.08)"/>
+    </svg>
+  </div>
+
+  <!-- TEXT -->
+  <div class="text-layer">
+    <span class="eyebrow">— 1 Syawal 1446 Hijriah —</span>
+
+    <div class="main-heading">
+      <span class="heading-line1">Selamat</span>
+      <span class="heading-line2">Hari Raya</span>
+      <span class="heading-line3">Aidilfitri</span>
+    </div>
+
+    <div class="divider-line">
+      <div class="dl-bar"></div>
+      <span class="dl-icon">✦ &nbsp;Maaf Zahir & Batin&nbsp; ✦</span>
+      <div class="dl-bar"></div>
+    </div>
+
+    <p class="message">
+      Semoga segala dosa diampuni,
+      hati yang <em>retak dipulihkan</em>, dan setiap pintu
+      yang tertutup dibuka kembali dengan <em>cahaya rahmat-Nya.</em>
+    </p>
+
+    <div class="music-row">
+      <div class="music-play" id="playBtn" onclick="toggleMusic()">▶</div>
+      <div class="music-info">
+        <div class="music-track">Suasana Hari Raya · Anuar Zain & Ellina</div>
+        <div class="music-status" id="musicStatus">Ketuk untuk memainkan muzik</div>
+      </div>
+      <div class="eq-bars paused" id="eqBars">
+        <div class="eq-bar"></div>
+        <div class="eq-bar"></div>
+        <div class="eq-bar"></div>
+        <div class="eq-bar"></div>
+        <div class="eq-bar"></div>
+        <div class="eq-bar"></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /scene -->
+
+<script>
+// ── STARS ──
+const sc=document.getElementById('stars');
+for(let i=0;i<100;i++){
+  const s=document.createElement('div');
+  s.className='star';
+  const sz=Math.random()*2+0.5;
+  const mo=0.1+Math.random()*0.35;
+  s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*60}%;--d:${2+Math.random()*5}s;--dl:${Math.random()*5}s;--mo:${mo};opacity:${mo};`;
+  sc.appendChild(s);
+}
+
+// ── FIREFLIES ──
+const fc=document.getElementById('fireflies');
+for(let i=0;i<10;i++){
+  const f=document.createElement('div');
+  f.className='firefly';
+  const tx=(Math.random()-.5)*90,ty=(Math.random()-.5)*60;
+  const tx2=(Math.random()-.5)*70,ty2=(Math.random()-.5)*50;
+  f.style.cssText=`left:${10+Math.random()*80}%;top:${50+Math.random()*40}%;--dur:${5+Math.random()*8}s;--dl:${Math.random()*6}s;--tx:${tx}px;--ty:${ty}px;--tx2:${tx2}px;--ty2:${ty2}px;`;
+  fc.appendChild(f);
+}
+
+// ── WEB AUDIO ──
+let actx=null,playing=false,nodes=[];
+const hz={B3:246.94,C4:261.63,D4:293.66,E4:329.63,F4:349.23,G4:392,A4:440,B4:493.88,C5:523.25,G3:196,A3:220,F3:174.61,E3:164.81};
+const mel=[['E4',.8],['D4',.4],['C4',1.2],['D4',.8],['E4',.8],['G4',1.2],['A4',.8],['G4',.4],['E4',.8],['D4',.4],['C4',1.6],['C4',.4],['G4',.8],['A4',.4],['B4',1.2],['A4',.8],['G4',.8],['E4',1.2],['D4',.8],['E4',.4],['G4',.8],['A4',.4],['G4',.8],['E4',.4],['D4',.4],['C4',1.6]];
+const pad=[['C4',1.6],['G3',1.6],['A3',1.6],['F3',1.6],['G3',1.6],['E3',1.6],['F3',1.6],['C4',1.6]];
+
+function playN(f,t,d,v,type='triangle',det=0){
+  const o=actx.createOscillator(),g=actx.createGain();
+  const dl=actx.createDelay(2);dl.delayTime.value=.35;
+  const dlg=actx.createGain();dlg.gain.value=.22;
+  o.connect(g);g.connect(actx.destination);g.connect(dl);dl.connect(dlg);dlg.connect(actx.destination);
+  o.type=type;o.frequency.value=f;o.detune.value=det;
+  g.gain.setValueAtTime(0,t);
+  g.gain.linearRampToValueAtTime(v,t+.12);
+  g.gain.setValueAtTime(v,t+d*.6);
+  g.gain.exponentialRampToValueAtTime(.001,t+d+.3);
+  o.start(t);o.stop(t+d+.5);
+  nodes.push(o);
+}
+function loop(){
+  if(!playing)return;
+  const tp=60/72*.55;
+  let t=actx.currentTime+.1;
+  const tot=mel.reduce((s,[,d])=>s+d*tp,0);
+  mel.forEach(([n,d])=>{if(hz[n]){playN(hz[n],t,d*tp,.1,'triangle');playN(hz[n],t+.005,d*tp,.04,'sine',5);}t+=d*tp;});
+  let tb=actx.currentTime+.1;
+  pad.forEach(([n,d])=>{if(hz[n])playN(hz[n]*.5,tb,d*tp*1.1,.05,'sine');tb+=d*tp;});
+  setTimeout(()=>{if(playing)loop();},(tot-.5)*1000);
+}
+function startMusic(){
+  if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();
+  if(actx.state==='suspended')actx.resume();
+  playing=true;loop();
+}
+function stopMusic(){
+  playing=false;
+  nodes.forEach(n=>{try{n.stop()}catch(e){}});nodes=[];
+}
+let on=false;
+function setUI(s){
+  document.getElementById('playBtn').textContent=s?'⏸':'▶';
+  document.getElementById('musicStatus').textContent=s?'Sedang bermain…':'Ketuk untuk memainkan muzik';
+  const eq=document.getElementById('eqBars');
+  s?eq.classList.remove('paused'):eq.classList.add('paused');
+}
+function toggleMusic(){
+  on=!on;
+  on?startMusic():stopMusic();
+  setUI(on);
+}
+// Autoplay on load
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    try{
+      actx=new(window.AudioContext||window.webkitAudioContext)();
+      if(actx.state!=='suspended'){on=true;startMusic();setUI(true);}
+    }catch(e){}
+  },1800);
+});
+// Resume on first touch (iOS)
+document.addEventListener('touchstart',()=>{
+  if(actx&&actx.state==='suspended'){
+    actx.resume().then(()=>{if(!on){on=true;startMusic();setUI(true);}});
+  }
+},{once:true,passive:true});
+document.addEventListener('click',()=>{
+  if(actx&&actx.state==='suspended'){
+    actx.resume().then(()=>{if(!on){on=true;startMusic();setUI(true);}});
+  }
+},{once:true});
+</script>
+</body>
+</html>
