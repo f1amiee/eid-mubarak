@@ -467,6 +467,8 @@ html,body{
 
 </div><!-- /scene -->
 
+<audio id="rayaAudio" src="Suasana_Hari_Raya_-_Anuar_Zain___Ellina.mp3" loop preload="auto"></audio>
+
 <script>
 // ── STARS ──
 const sc=document.getElementById('stars');
@@ -490,76 +492,44 @@ for(let i=0;i<10;i++){
   fc.appendChild(f);
 }
 
-// ── WEB AUDIO ──
-let actx=null,playing=false,nodes=[];
-const hz={B3:246.94,C4:261.63,D4:293.66,E4:329.63,F4:349.23,G4:392,A4:440,B4:493.88,C5:523.25,G3:196,A3:220,F3:174.61,E3:164.81};
-const mel=[['E4',.8],['D4',.4],['C4',1.2],['D4',.8],['E4',.8],['G4',1.2],['A4',.8],['G4',.4],['E4',.8],['D4',.4],['C4',1.6],['C4',.4],['G4',.8],['A4',.4],['B4',1.2],['A4',.8],['G4',.8],['E4',1.2],['D4',.8],['E4',.4],['G4',.8],['A4',.4],['G4',.8],['E4',.4],['D4',.4],['C4',1.6]];
-const pad=[['C4',1.6],['G3',1.6],['A3',1.6],['F3',1.6],['G3',1.6],['E3',1.6],['F3',1.6],['C4',1.6]];
+// ── MP3 PLAYER ──
+const audio = document.getElementById('rayaAudio');
+let on = false;
 
-function playN(f,t,d,v,type='triangle',det=0){
-  const o=actx.createOscillator(),g=actx.createGain();
-  const dl=actx.createDelay(2);dl.delayTime.value=.35;
-  const dlg=actx.createGain();dlg.gain.value=.22;
-  o.connect(g);g.connect(actx.destination);g.connect(dl);dl.connect(dlg);dlg.connect(actx.destination);
-  o.type=type;o.frequency.value=f;o.detune.value=det;
-  g.gain.setValueAtTime(0,t);
-  g.gain.linearRampToValueAtTime(v,t+.12);
-  g.gain.setValueAtTime(v,t+d*.6);
-  g.gain.exponentialRampToValueAtTime(.001,t+d+.3);
-  o.start(t);o.stop(t+d+.5);
-  nodes.push(o);
-}
-function loop(){
-  if(!playing)return;
-  const tp=60/72*.55;
-  let t=actx.currentTime+.1;
-  const tot=mel.reduce((s,[,d])=>s+d*tp,0);
-  mel.forEach(([n,d])=>{if(hz[n]){playN(hz[n],t,d*tp,.1,'triangle');playN(hz[n],t+.005,d*tp,.04,'sine',5);}t+=d*tp;});
-  let tb=actx.currentTime+.1;
-  pad.forEach(([n,d])=>{if(hz[n])playN(hz[n]*.5,tb,d*tp*1.1,.05,'sine');tb+=d*tp;});
-  setTimeout(()=>{if(playing)loop();},(tot-.5)*1000);
-}
-function startMusic(){
-  if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();
-  if(actx.state==='suspended')actx.resume();
-  playing=true;loop();
-}
-function stopMusic(){
-  playing=false;
-  nodes.forEach(n=>{try{n.stop()}catch(e){}});nodes=[];
-}
-let on=false;
 function setUI(s){
-  document.getElementById('playBtn').textContent=s?'⏸':'▶';
-  document.getElementById('musicStatus').textContent=s?'Sedang bermain…':'Ketuk untuk memainkan muzik';
-  const eq=document.getElementById('eqBars');
-  s?eq.classList.remove('paused'):eq.classList.add('paused');
+  document.getElementById('playBtn').textContent = s ? '⏸' : '▶';
+  document.getElementById('musicStatus').textContent = s ? 'Sedang bermain…' : 'Ketuk untuk memainkan muzik';
+  const eq = document.getElementById('eqBars');
+  s ? eq.classList.remove('paused') : eq.classList.add('paused');
 }
+
 function toggleMusic(){
-  on=!on;
-  on?startMusic():stopMusic();
+  on = !on;
+  if(on){ audio.play(); } else { audio.pause(); }
   setUI(on);
 }
+
 // Autoplay on load
-window.addEventListener('load',()=>{
-  setTimeout(()=>{
-    try{
-      actx=new(window.AudioContext||window.webkitAudioContext)();
-      if(actx.state!=='suspended'){on=true;startMusic();setUI(true);}
-    }catch(e){}
-  },1800);
+window.addEventListener('load', () => {
+  audio.play().then(() => {
+    on = true;
+    setUI(true);
+  }).catch(() => {
+    // Autoplay blocked — tunggu user interact
+  });
 });
-// Resume on first touch (iOS)
-document.addEventListener('touchstart',()=>{
-  if(actx&&actx.state==='suspended'){
-    actx.resume().then(()=>{if(!on){on=true;startMusic();setUI(true);}});
+
+// Resume on first touch/click (iOS & strict browsers)
+function tryAutoplay(){
+  if(!on){
+    audio.play().then(() => {
+      on = true;
+      setUI(true);
+    }).catch(()=>{});
   }
-},{once:true,passive:true});
-document.addEventListener('click',()=>{
-  if(actx&&actx.state==='suspended'){
-    actx.resume().then(()=>{if(!on){on=true;startMusic();setUI(true);}});
-  }
-},{once:true});
+}
+document.addEventListener('touchstart', tryAutoplay, { once: true, passive: true });
+document.addEventListener('click', tryAutoplay, { once: true });
 </script>
 </body>
 </html>
